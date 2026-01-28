@@ -2,14 +2,23 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.chrome.options import Options
 from urllib import parse
 from os import path
 from pathlib import Path
+import csv
 
-driver = webdriver.Chrome()
+chrome_options = Options()
+chrome_options.add_argument("--headless")  #Run Chrome in headless mode
+chrome_options.add_argument("--disable-gpu")  #Disable GPU acceleration
+chrome_options.add_argument("--window-size=1920,1080")  #Set window size to ensure all elements are visible
+chrome_options.add_argument("--ignore-certificate-errors")  #Ignore certificate errors
+
+driver = webdriver.Chrome(options=chrome_options)
+
 search_key = parse.quote("防災包")
-
 url = f"https://www.momoshop.com.tw/search/{search_key}?viewport=desktop&cateLevel=0&_isFuzzy=0&searchType=1"
+
 driver.get(url) #Open the webpage
 
 try:
@@ -17,14 +26,13 @@ try:
         EC.presence_of_element_located(
             (By.XPATH, "//ul[@class='listAreaUl']")
             ))#Wait until the product list is loaded
-    
     shop_items = driver.find_elements(By.XPATH, "//ul[@class='listAreaUl']/li")  #Get all product items
 
-    products_data = [] #List to store product information
+    products_data = []
 
     print(f"Found {len(shop_items)} items.")
 
-    for i, item in enumerate(shop_items, start=1):
+    for i, item in enumerate(shop_items, start=1):  #Iterate through each product item
         product_info = {
             "name" : None,
             "price" : None,
@@ -64,11 +72,15 @@ except Exception as e:
 
 finally:
     driver.quit()
-    save_path = path.join((Path(__file__).resolve().parent), 'momoshop_products.txt')  # os.path.dirname(path.abspath(__file__)) = pathlib.Path(__file__).resolve().parent
+    for i in range(len(products_data)):
+        print(f'Name: {products_data[i]["name"]} \nPrice: {products_data[i]["price"]} \nLink: {products_data[i]["link"]}\n')
+    
+    save_path = path.join((Path(__file__).resolve().parent), 'momoshop_products.csv')  # os.path.dirname(path.abspath(__file__)) = pathlib.Path(__file__).resolve().parent
     with open(save_path, 'w', encoding='utf-8') as f:
+        r = csv.writer(f)
+        r.writerow(['Name', 'Price', 'Link'])
         for product in products_data:
-            f.write(f"Name: {product['name']}\n")
-            f.write(f"Price: {product['price']}\n")
-            f.write(f"Link: {product['link']}\n")
-            f.write("\n")
-        #If you use 'with open', you don't need to close the file explicitly
+            r.writerow([product['name'], product['price'], product['link']])
+            #If you use 'with open', you don't need to close the file explicitly
+            
+
