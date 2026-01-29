@@ -31,7 +31,7 @@ This directory is for learning the operations of csv
 ### What I practiced
 - Using `csv.read()` to read csv file
 - Using `csv.writer().writerow()` to write a row down on csv file 
-- Using `zip()`
+- Using `zip()` to zip 2 lists
 
 ### Notes
 - There are two types to read a csv file: `reader()` and `DictReader()`
@@ -40,6 +40,8 @@ This directory is for learning the operations of csv
 - `csv_operate.py`: To use API and write something updating on a Google Sheets file
 - `csv_read.py`: To understand the operations of reading csv files
 - `csv_write.py`: To write something in `sample.csv`
-- `csv_selenium_momo.py`: To get information from a shopping website and then store them in `momoshop_products.csv`
+- `csv_selenium_momo.py`: To get information from a shopping website and then store them in `momoshop_products.csv` and a Google Sheet file
 - `momoshop_products.csv`: To store the information from a shopping website
-- `sample.csv`: To store test characters
+- `sample.csv`: To store test information
+- `sheet.py`: To store a method to write something in a Google Sheet file
+- `test.py`: To test if `sheet.py` really works         

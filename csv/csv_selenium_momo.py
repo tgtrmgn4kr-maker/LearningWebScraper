@@ -6,7 +6,13 @@ from selenium.webdriver.chrome.options import Options
 from urllib import parse
 from os import path
 from pathlib import Path
+from datetime import datetime
 import csv
+import sheet
+import gspread
+import os
+import sys
+
 
 chrome_options = Options()
 chrome_options.add_argument("--headless")  #Run Chrome in headless mode
@@ -21,7 +27,24 @@ url = f"https://www.momoshop.com.tw/search/{search_key}?viewport=desktop&cateLev
 
 driver.get(url) #Open the webpage
 
+
+def save_to_Google(data, file_name, wks_title):
+    gs = sheet.GoogleSheet(file_name, wks_title)
+    gs.resize()
+
+    headers = ['時間','名稱', '價格', '數量']
+    gs.update_header(headers)
+    for d in data:
+        row = [
+            d.get('data_time',''),
+            d.get('name',''),
+            d.get('price',''),
+            d.get('link','')
+        ]
+        gs.append_row(row)
+
 try:
+    
     WebDriverWait(driver, 10).until(
         EC.presence_of_element_located(
             (By.XPATH, "//ul[@class='listAreaUl']")
@@ -82,5 +105,7 @@ finally:
         for product in products_data:
             r.writerow([product['name'], product['price'], product['link']])
             #If you use 'with open', you don't need to close the file explicitly
+    
+    save_to_Google(products_data, 'API練習', '工作表1')
             
 
