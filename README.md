@@ -5,7 +5,7 @@ This repository is for recording my learning progress
 - `sample.html`: To understand the structure of a html file
 
 ## selenium
-This directory is for learning how to get informations from a webpage by selenium 
+This directory is for learning how to get information from a webpage by selenium 
 
 ### What I practiced
 - Using `webdriver.Chrome()` to open a browser
