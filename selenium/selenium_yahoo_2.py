@@ -42,7 +42,9 @@ try:
             product_info["link"] = link_element.get_attribute("href")   #Get the product link
 
             price_element = item.find_element(By.XPATH, ".//span[@class='price']") #Get the price element
-            product_info["price"] = price_element.text.strip()
+            price = price_element.text.strip().replace('起','')
+            price = price.replace(',','')
+            product_info["price"] = price
 
             item_found = True
             
